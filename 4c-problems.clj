@@ -218,9 +218,19 @@
 (Integer/toBinaryString (Integer. "7"))
 (#(Integer/toBinaryString (Integer. %)) "0")
 
+(reduce + (seq "111"))
+(seq "111")
 
+(take 5 (iterate #(* % 2) 1))
 
+((fn [x]
+   (take (count x)
+         (iterate #(* % 2) 1)))
+ "111" )
+
+(__ "111")
 (__ "1000")
+(count "111")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 134. A nil key
@@ -231,6 +241,47 @@
 (#(if (contains? %2 %1)
     (nil? (%2 %1) )
     false) :c {:a nil :b 2})
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 135. Infix calculator
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defn infix [f s t]
+  (s f t))
+
+((fn p11 [& x]
+   (let [result (apply infix (take 3 x))]
+     (if (< 3 (count x))
+       (do (println result)
+           (println (cons result (drop 3 x)))
+           (apply p11
+                  (cons result (drop 3 x))))
+       (do (println result)
+           result)
+       ))) 1 + 2 / 6 * 8)
+
+((fn p11 [& x]
+   (let [result (apply infix (take 3 x))]
+     (if (< 3 (count x))
+       (apply p11
+              (cons result (drop 3 x)))
+       result
+       ))) 2 + 5)
+
+
+((fn p11 [& x]
+   (let [infixit #(%2 %1 %3)
+         result (apply infixit (take 3 x))]
+     (if (< 3 (count x))
+       (apply p11
+              (cons result (drop 3 x)))
+       result
+       ))) 2 + 5)
+
+(#(%2 %1 %3) 2 + 5)
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 143. Dot product
@@ -247,14 +298,32 @@
 (#(apply hash-map (interleave %2 (repeat %1))) "x" [1 2 3])
 (interleave (repeat (count [1 2 3]) "x") [1 2 3])
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 157. Indexing sequences
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(map-indexed (comp
+              #(into [] %)
+              reverse
+              vector) [[:foo]
+                       {:bar :baz}])
+[:a :b :c]
+
+((fn [x]
+   (map-indexed
+    (comp
+     #(into [] %)
+     reverse
+     vector) x)) [:a :b :c])
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 166. GT LT EQ
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn p166 [op x y]
-(if (op x y)
-  ))
+  (if (op x y)
+    ))
 (= :gt (__ < 5 1))
 
 (= :eq (__ (fn [x y] (< (count x) (count y))) "pear" "plum"))
@@ -263,14 +332,4 @@
 
 
 
-;; Use authenticator to get the Google auth code for one login
-(println "hello")
 
-
-(range 40)
-(partition 2 (range 20))
-
-(let [[a b c d e] [0 1 2 3 4]]
-  (println b))
-
-{1 "x" 2 "x" 3 "x"}

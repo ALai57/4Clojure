@@ -171,6 +171,56 @@
 
 #{1 2 3 4 5 6} #{1 3 5 7}
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 97. Pascal's Triangle
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(fn p97 [x]
+  (if (= x 1)
+    [1]
+    (p97 (dec x)))
+  )
+
+(defn p97 [x]
+  (if (= x 1)
+    [1]
+    (do
+      ;;(println (dec x))
+      (println (p97 (dec x)))
+      (concat '(1)
+              (#(map + % (drop 1 %)) (p97 (dec x)))
+              '(1))
+      )))
+
+(p97 4)
+
+(fn p97 [x]
+  (if (= x 1)
+    [1]
+    (concat '(1)
+            (#(map + % (drop 1 %)) (p97 (dec x)))
+            '(1))
+    ))
+
+
+(concat '(1) '(3) '(4))
+(map + [1 2 1] (drop 1 [1 2 1]) )
+
+
+(#(map + % (drop 1 %)) [1 1])
+(#(map + % (drop 1 %)) [1 3 3 1])
+
+;;- The first row is 1.
+;;- Each successive row is computed by adding together adjacent numbers in the row above, and adding a 1 to the beginning and end of the row.
+
+
+(= (map __ (range 1 6))
+   [     [1]
+    [1 1]
+    [1 2 1]
+    [1 3 3 1]
+    [1 4 6 4 1]
+    [1 5 10 10 5 1]])
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 99. Multiply and split

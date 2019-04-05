@@ -379,6 +379,48 @@
 (#(reduce + (map * %1 %2)) [0 1 0] [1 0 0])
 (__ [0 1 0] [1 0 0])
 
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 147. Pascal's trapezoid
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;lazy seq
+
+#_(defn p147 [x]
+    (let [nxt-fcn #(map +' % (drop 1 %))]
+      (lazy-seq (concat
+                 (list (first x))
+                 (nxt-fcn x)
+                 (list (last x))))))
+
+#_(defn p147 [x]
+    (let [nxt-fcn #(map +' % (drop 1 %))]
+      (lazy-seq (concat
+                 (list (first x))
+                 (nxt-fcn x)
+                 (list (last x))))))
+
+(defn p147 [s]
+  (let [add-last-layer #(map +' % (drop 1 %))
+        make-next-layer #(lazy-seq (concat
+                                    (list (first %))
+                                    (add-last-layer %)
+                                    (list (last %))))]
+    (iterate make-next-layer s)))
+
+(take 5 (p147 [1]))
+(take 5 (p147 [2 3 2]))
+(take 2 (p147 [3 1 2]))
+
+
+(#(map + % (drop 1 %)) [2 3 2])
+
+(= (second (__ [2 3 2])) [2 5 5 2])
+
+;; anjensan's solution --- beautiful!!!
+;;iterate #(map + `(0 ~@% 0) `(~@% 0))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 156. Map defaults
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -261,6 +261,44 @@
 
 (map (make_power 3) [1 2 3 4])
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 118. Re-implement map
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(loop [f [x & remain]]
+  (f x))
+
+(defn p118 [f x]
+  (loop [[el & remain] x
+         result []]
+    ;;(println "bye")
+    (if (nil? el)
+      result
+      (recur remain (conj result (f el))))))
+
+(p118 inc [2 3 4 5 6])
+
+(= [3 4 5 6 7]
+   (__ inc [2 3 4 5 6]))
+
+(conj [] (inc 2))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 120. Sum of square of digits
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(map #(str %) (str 10))
+
+(Integer/valueOf "1")
+
+(map #(Integer/valueOf (str %)) (String/valueOf 10))
+
+(String/valueOf 10)
+(= 8 (__ (range 10)))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 122. Read a binary number
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -337,6 +337,42 @@
 (count "111")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 128. Recognize playing cards
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defn p128 [text-in]
+  (let [num->val {:2 0
+                  :3 1
+                  :4 2
+                  :5 3
+                  :6 4
+                  :7 5
+                  :8 6
+                  :9 7
+                  :T 8
+                  :J 9
+                  :Q 10
+                  :K 11
+                  :A 12}
+        chr->suit {:C :club
+                   :D :diamond
+                   :H :heart
+                   :S :spade}
+        [s n] (map keyword (map str (seq text-in)))]
+    (println {:suit (s chr->suit) :rank (n num->val)})
+    {:suit (s chr->suit) :rank (n num->val)}))
+
+convert-num (fn [x] (#(second %) x))
+(println (map [num->val chr->suit] card-symbols))
+
+
+(p128 "DQ")
+
+(#(first %) (map str (seq "DQ")))
+
+(= {:suit :diamond :rank 10} (__ "DQ"))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 134. A nil key
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

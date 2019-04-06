@@ -263,13 +263,33 @@
        ) 8 4)
 
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 100. Least common multiple
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn find-lcm [n1 n2 & args]
+  (let [finder #(loop [x %1 y %2]
+                  (if (= 0 (mod x y))
+                    x
+                    (recur (+ x %1) y)))]
+    (if (nil? args)
+      (finder n1 n2)
+      (apply find-lcm (list* (finder n1 n2) args)))))
+
+(find-lcm 3/4 1/6)
+
+(find-lcm 5 3 7)
+
+(__ 2 3)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 107. Lexical closures
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn make_power [n]
- #(reduce * (repeat n %))
-)
+  #(reduce * (repeat n %))
+  )
 
 ((make_power 3) 5)
 
@@ -510,6 +530,16 @@ convert-num (fn [x] (#(second %) x))
 
 (= :eq (__ (fn [x y] (< (count x) (count y))) "pear" "plum"))
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 173. Intro to destructuring 2
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(= 3
+   (let [[x y] [+ (range 3)]] (apply __))
+   (let [[[x y] b] [[+ 1] 2]] (__ b))
+   (let [[x y] [inc 2]] (__)))
 
 
 ;; Hello, Sahil!

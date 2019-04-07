@@ -1,5 +1,3 @@
-;; This buffer is for text that is not saved, and for Lisp evaluation.
-;; To create a file, visit it with <open> and enter text in its buffer.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 15. Double down
@@ -340,17 +338,17 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (Integer/toBinaryString (Integer. "7"))
-(#(Integer/toBinaryString (Integer. %)) "0")
+(#(Integer/toBinaryString (Integer. %)) "313")
 
-(reduce + (seq "111"))
 (seq "111")
 
-(take 5 (iterate #(* % 2) 1))
+;; Need anonymous function because it's a Java method
+(map #(Integer/parseInt %) (map str (seq "111")))
 
-((fn [x]
-   (take (count x)
-         (iterate #(* % 2) 1)))
- "111" )
+
+(Integer/valueOf "111")
+
+(#(Integer/valueOf % 2) "111")
 
 (__ "111")
 (__ "1000")
@@ -359,6 +357,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 128. Recognize playing cards
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 (defn p128 [text-in]
   (let [num->val {:2 0
                   :3 1
@@ -393,8 +393,9 @@ convert-num (fn [x] (#(second %) x))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 134. A nil key
+ ;; 134. A nil key
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 (__ :a {:a nil :b 2})
 
@@ -403,8 +404,9 @@ convert-num (fn [x] (#(second %) x))
     false) :c {:a nil :b 2})
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 135. Infix calculator
+ ;; 135. Infix calculator
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 
 (defn infix [f s t]
@@ -444,14 +446,44 @@ convert-num (fn [x] (#(second %) x))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 143. Dot product
+ ;; 143. Dot product
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 (reduce + (map * [0 1 0] [1 0 0]))
 (#(reduce + (map * %1 %2)) [0 1 0] [1 0 0])
 (__ [0 1 0] [1 0 0])
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ;; 146. Trees into tables
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+
+(for [x '{a {p 1, q 2}
+          b {m 3, n 4}}]
+  (if (map? x)
+    (println x)
+    "Not a map"))
+
+
+(map? {:p 1})
+
+
+
+(__ '{a {p 1, q 2}
+      b {m 3, n 4}})
+
+(macroexpand-1 '(for [x [1 2 3]]
+                  (println "hello")))
+
+
+
+
+
+
+
+(for [x [1 2 3]]
+  (println "hello"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 147. Pascal's trapezoid

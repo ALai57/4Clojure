@@ -455,35 +455,60 @@ convert-num (fn [x] (#(second %) x))
 (__ [0 1 0] [1 0 0])
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
- ;; 146. Trees into tables
+;; 146. Trees into tables
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Deep recursion into trees
+(defn find-tree [y]
+  (for [[k v] y]
+    (if (not (map? v))
+      (concat k v)
+      (concat k (find-tree v)))))
 
-(for [x '{a {p 1, q 2}
-          b {m 3, n 4}}]
-  (if (map? x)
-    (println x)
-    "Not a map"))
+(defn find-tree [y & pth]
+  (flatten
+   (for [[k v] y]
+     (if (not (map? v))
+       (do
+         (println pth)
+         (list (into [] (rest (concat pth (list k)))) v))
+       (do
+         (println pth k)
+         (find-tree v pth k))))))
 
-
-(map? {:p 1})
-
-
-
-(__ '{a {p 1, q 2}
-      b {m 3, n 4}})
-
-(macroexpand-1 '(for [x [1 2 3]]
-                  (println "hello")))
-
-
-
-
+;; Only need to flatten two levels!!!!!!!!!!!
+((fn find-tree [y]
+   (into {} (for [[k v] y
+                  [kk vv] v]
+              [[k kk] vv]))) '{a {p 1, q 2}
+                               b {m 3, n 4}})
 
 
 
-(for [x [1 2 3]]
-  (println "hello"))
+(﻿(fn [mp]
+   (into {}
+         (for [[k v] mp
+               [vk vv] v]
+           (do
+             (println k v vk vv)
+             (vec [[k vk] vv]))))) '{a {p 1, q 2}
+                                     b {m 3, n 4}})
+
+
+(#(into {}
+        (for [[a h] %
+              [b v] h]
+          (do
+            (println a h b v)
+            [[a b] v]))) '{a {p 1, q 2}
+                           b {m 3, n 4}})
+
+
+
+
+(find-tree '{[1] {a b c d}
+             [2] {q r s t u v w x}})
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 147. Pascal's trapezoid

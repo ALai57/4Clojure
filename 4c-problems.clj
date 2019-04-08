@@ -87,20 +87,17 @@
 
 (map  #(> % 5) [1 3 6 8])
 
-(defn p63 [f d]
-  (interleave (map f d) d))
+((fn [f xs]
+   (for [x xs] {(f x) [x]})) #(> % 5) [1 3 6 8])
 
+(map #(> % 5) [1 3 6 8])
 
-(defn p63 [f d]
-  (apply merge-with concat (for [d ds] {(f d) [d]})))
+(defn pxx [f x]
+  (apply merge-with concat
+         (map hash-map (map f x) (map vector x))))
 
-(p63 #(> % 5) [1 3 6 8])
-
-(for [f d] {(f d) d})
-
-
-((fn [f xs] (apply merge-with concat (for [x xs] {(f x) [x]}))) #(> % 5) [1 3 6 8] )
-
+(pxx #(> % 5) [1 3 6 8])
+(merge-with )
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 66. Greatest common divisor
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -191,16 +191,53 @@
 ;; 95. To tree or not to tree
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;symmetry?
-(= (__ '(:a (:b nil nil) nil))
-   true)
+
+(defn p95 [x]
+  (let [valid-entry? (fn [x]
+                       (if (nil? x)
+                         true
+                         (if (sequential? x)
+                           (p95 x)
+                           false)))]
+    (and
+     (every? true? (flatten (map valid-entry? (rest x))))
+     (= (count (rest x)) 2))))
+
+(p95 '(:b nil (1 nil nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 96. Beauty is symmetry
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; split into left and right halves
+;; reverse one half
+;; check if they're equal
 
-(#(= % (reverse %)) '(:a (:b nil nil) (:b nil nil)))
+(second '(:a (:b nil nil) (:b nil nil)))
+
+
+(defn p96 [y]
+  (let
+      [reverse-branch (fn [[f s t]]
+                        (let [next-step (fn [x]
+                                          (if (sequential? x)
+                                            (reverse-branch x)
+                                            x))]
+                          (list f (next-step t) (next-step s))))]
+    (= (nth y 2)
+       (reverse-branch (second y)))))
+
+(= (nth '(:a (:b nil nil) (:b nil nil)) 2)
+   (reverse-branch (second '(:a (:b nil nil) (:b nil nil)))))
+
+
+(p96 '(:a (:b nil nil) (:b nil nil)))
+
+(reverse-branch (second '(:a (:b nil nil) (:b nil nil))))
+
+(first '(:a (:b nil nil) (:b nil nil)))
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 97. Pascal's Triangle

@@ -604,6 +604,60 @@ convert-num (fn [x] (#(second %) x))
 ;; anjensan's solution --- beautiful!!!
 ;;iterate #(map + `(0 ~@% 0) `(~@% 0))
 
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 153. Pairwise disjoint
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defn p153t [bigset]
+  (println "Iteration---")
+  (println (seq bigset))
+  (let [[s1 s2 & s] (if (sequential? bigset)
+                      bigset
+                      (seq bigset))]
+    (println s1)
+    (println s2)
+    (println s)
+    (println "Intersection set:: " (clojure.set/intersection s1 s2))
+    (println "Unioned set:: "(clojure.set/union s1 s2))
+    (println "List::" (list* (clojure.set/union s1 s2) s))
+    (if (not (empty? (clojure.set/intersection s1 s2)))
+      false
+      (if (nil? s2)
+        true
+        (p153t (list* (clojure.set/union s1 s2) s))))))
+
+(defn p153t [bigset]
+  (let [[s1 s2 & s] (if (sequential? bigset)
+                      bigset
+                      (seq bigset))]
+    (if (not (empty? (clojure.set/intersection s1 s2)))
+      false
+      (if (nil? s2)
+        true
+        (p153t (list* (clojure.set/union s1 s2) s))))))
+
+(p153t #{#{:a :b :c :d :e}
+         #{:a :b :c :d}
+         #{:a :b :c}
+         #{:a :b}
+         #{:a}})
+
+(p153t #{#{\U} #{\s} #{\e \R \E} #{\P \L} #{\.}})
+
+
+
+(apply clojure.set/intersection (seq #{#{:a :b :c :d :e}
+                                       #{:a :b :c :d}
+                                       #{:a :b :c}
+                                       #{:a :b}
+                                       #{:a}}))
+
+;; Yet again, Anjesan is amazing
+#(let [s (apply concat %)] (= (count s) (count (set s))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 156. Map defaults
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

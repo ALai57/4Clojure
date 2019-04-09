@@ -53,6 +53,32 @@
 (#(filter odd? %) [1 2 3 4 5])
 (__ #{1 2 3 4 5})
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 44. Rotate sequence
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(take -2 [1 2 3 4 5])
+
+(defn p44 [r x]
+  (let [n (mod r (count x))]
+    (if (> 0 n)
+      (concat
+       (drop (+ (count x) n) x)
+       (take (+ (count x) n) x))
+      (concat
+       (drop n x)
+       (take n x)))))
+
+(p44 6 [1 2 3 4 5])
+
+
+(= (__ 2 [1 2 3 4 5]) '(3 4 5 1 2))
+
+(= (__ 2 [1 2 3 4 5]) '(3 4 5 1 2))
+
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 51. Advanced destructuring
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -710,3 +736,13 @@ convert-num (fn [x] (#(second %) x))
 ;; Hello, Sahil!
 
 
+
+
+(= (__ 3) '(1 1 2))
+
+(last (take 3 (iterate #(flatten (concat '(1) (map + % (drop 1 %)) '(1))) nil)))
+
+(last (take 4 (iterate #(conj % (reduce + (take 2 (reverse %)))) [1 1])))
+
+((fn [n] (last
+          (take (- n 1) (iterate #(conj % (reduce + (take 2 (reverse %)))) [1 1])))) 3)

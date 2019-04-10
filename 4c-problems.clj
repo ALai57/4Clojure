@@ -55,6 +55,46 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 43. Reverse interleave
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+(map-indexed #(list %1 %2) [1 2 3 4 5 6])
+
+(defn p43 [x n]
+  (map-indexed #(list (mod %1 n) %2) x))
+(defn get-group [n]
+  (println n)
+  (fn [x] (map second (filter #(= n (first %1)) x))))
+
+
+((get-group 1) (p43 [1 2 3 4 5 6] 2))
+((second  (map get-group (range 2))) (p43 [1 2 3 4 5 6] 2))
+((apply juxt (map get-group (range 2))) (p43 [1 2 3 4 5 6] 2))
+((juxt (get-group 0) (get-group 1)) (p43 [1 2 3 4 5 6] 2))
+
+
+(filter #(= 1 (first %1)) (p43 [1 2 3 4 5 6] 2))
+
+
+;; TRY FOR REAL
+(defn p43 [x n]
+  (let [re-index (fn [x n]
+                   (map-indexed #(list (mod %1 n) %2) x))
+        re-group (fn [n]
+                   (fn [x]
+                     (map second
+                          (filter #(= n (first %1)) x))))]
+
+    ((apply juxt (map re-group (range n))) (re-index x n))))
+
+(p43 [1 2 3 4 5 6] 2 )
+
+(#(partition %2 %1) [1 2 3 4 5 6] 2)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 44. Rotate sequence
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

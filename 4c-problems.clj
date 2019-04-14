@@ -168,6 +168,28 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 56. Find distinct
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(map first (group-by identity [1 2 1 3 1 2 4]))
+
+(#(map first (group-by identity %)) (range 50))
+
+(= (__ [1 2 1 3 1 2 4]) [1 2 3 4])
+
+(sort-by #(.indexOf (range 50) %) (group-by identity (range 50)))
+
+
+(defn p56 [s] (sort-by #(.indexOf s %) (map #(first %) (group-by identity s))))
+
+(p56 [1 2 1 3 1 2 4])
+
+(p56 (range 50))
+
+;; Anjesan's solution -- elegant!
+;; reduce #(if ((set %) %2) % (conj % %2)) []
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 62. Re- iterate!
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

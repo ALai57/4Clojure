@@ -234,11 +234,43 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 70. Word Sorting
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(sort-by
+ #(clojure.string/lower-case %)
+ (clojure.string/split "Have a nice day." #" "))
+
+(defn p70 [x]
+  (-> x
+      #_println
+      #_(partial clojure.string/split % #" ")
+      (partial re-seq #"[a-zA-Z]")
+      println
+      #_(partial sort-by clojure.string/lower-case)))
+
+(defn p70 [x]
+  (->> x
+       (re-seq #"[a-zA-Z ]")
+       (apply str)
+       (#(clojure.string/split % #" "))
+       (sort-by #(clojure.string/lower-case %))))
+
+(re-seq #"\w+" "Have a nice Day!")
+
+
+(p70 "Have a nice day!")
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 81. Set intersection
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn p81 [s1 s2]
-   (set (filter #(s2 %) s1)))
+  (set (filter #(s2 %) s1)))
 
 (sort (p81 #{0 1 2 3} #{2 3 4 5} )
 

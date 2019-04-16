@@ -53,6 +53,91 @@
 (#(filter odd? %) [1 2 3 4 5])
 (__ #{1 2 3 4 5})
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 43. Reverse interleave
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+(map-indexed #(list %1 %2) [1 2 3 4 5 6])
+
+(defn p43 [x n]
+  (map-indexed #(list (mod %1 n) %2) x))
+(defn get-group [n]
+  (println n)
+  (fn [x] (map second (filter #(= n (first %1)) x))))
+
+
+((get-group 1) (p43 [1 2 3 4 5 6] 2))
+((second  (map get-group (range 2))) (p43 [1 2 3 4 5 6] 2))
+((apply juxt (map get-group (range 2))) (p43 [1 2 3 4 5 6] 2))
+((juxt (get-group 0) (get-group 1)) (p43 [1 2 3 4 5 6] 2))
+
+
+(filter #(= 1 (first %1)) (p43 [1 2 3 4 5 6] 2))
+
+
+;; TRY FOR REAL
+(defn p43 [x n]
+  (let [re-index (fn [x n]
+                   (map-indexed #(list (mod %1 n) %2) x))
+        re-group (fn [n]
+                   (fn [x]
+                     (map second
+                          (filter #(= n (first %1)) x))))]
+
+    ((apply juxt (map re-group (range n))) (re-index x n))))
+
+(p43 [1 2 3 4 5 6] 2 )
+
+(#(partition %2 %1) [1 2 3 4 5 6] 2)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 44. Rotate sequence
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(take -2 [1 2 3 4 5])
+
+(defn p44 [r x]
+  (let [n (mod r (count x))]
+    (if (> 0 n)
+      (concat
+       (drop (+ (count x) n) x)
+       (take (+ (count x) n) x))
+      (concat
+       (drop n x)
+       (take n x)))))
+
+(p44 2 [1 2 3 4 5])
+
+((fn [n x]
+   (take n (cycle x))) 10 [1 2 3 4 5])
+
+
+(= (__ 2 [1 2 3 4 5]) '(3 4 5 1 2))
+
+(= (__ 2 [1 2 3 4 5]) '(3 4 5 1 2))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 46. Flipping out
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(fn [x] #(x %2 %1))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 50. Split by type
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(set (map second (group-by type [1 :a 2 :b 3 :c])))
+
+(type :a)
+(= (set (__ [1 :a 2 :b 3 :c])) #{[1 2 3] [:a :b :c]})
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 51. Advanced destructuring
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -62,6 +147,47 @@
 
 [1 2 3 4 5]
 
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 55. Count occurences
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(reduce-kv
+ (fn [x y z] (into x (hash-map y (count z)))) {}
+ (group-by identity [1 1 2 3 2 1 1]))
+
+
+(#(reduce-kv
+   (fn [x y z] (into x (hash-map y (count z)))) {}
+   (group-by identity %)) [1 1 2 3 2 1 1])
+
+(merge-with count [1 1 2 3 2 1 1])
+
+(= (__ [1 1 2 3 2 1 1]) {1 4, 2 2, 3 1})
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 56. Find distinct
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(map first (group-by identity [1 2 1 3 1 2 4]))
+
+(#(map first (group-by identity %)) (range 50))
+
+(= (__ [1 2 1 3 1 2 4]) [1 2 3 4])
+
+(sort-by #(.indexOf (range 50) %) (group-by identity (range 50)))
+
+
+(defn p56 [s] (sort-by #(.indexOf s %) (map #(first %) (group-by identity s))))
+
+(p56 [1 2 1 3 1 2 4])
+
+(p56 (range 50))
+
+;; Anjesan's solution -- elegant!
+;; reduce #(if ((set %) %2) % (conj % %2)) []
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 54. Partition Seq
@@ -152,11 +278,43 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 70. Word Sorting
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(sort-by
+ #(clojure.string/lower-case %)
+ (clojure.string/split "Have a nice day." #" "))
+
+(defn p70 [x]
+  (-> x
+      #_println
+      #_(partial clojure.string/split % #" ")
+      (partial re-seq #"[a-zA-Z]")
+      println
+      #_(partial sort-by clojure.string/lower-case)))
+
+(defn p70 [x]
+  (->> x
+       (re-seq #"[a-zA-Z ]")
+       (apply str)
+       (#(clojure.string/split % #" "))
+       (sort-by #(clojure.string/lower-case %))))
+
+(re-seq #"\w+" "Have a nice Day!")
+
+
+(p70 "Have a nice day!")
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 81. Set intersection
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn p81 [s1 s2]
-   (set (filter #(s2 %) s1)))
+  (set (filter #(s2 %) s1)))
 
 (sort (p81 #{0 1 2 3} #{2 3 4 5} )
 
@@ -212,19 +370,76 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 90. Cartesian product
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(for [e1 [:a :b :c]
+      e2 '(1 2 3)]
+  (list e1 e2))
+
+(#(set (for [s1 %1
+             s2 %2]
+         (list s1 s2)))  #{"ace" "king" "queen"} #{"♠" "♥" "♦" "♣"})
+
+(= (__ #{"ace" "king" "queen"} #{"♠" "♥" "♦" "♣"})
+   #{["ace"   "♠"] ["ace"   "♥"] ["ace"   "♦"] ["ace"   "♣"]
+     ["king"  "♠"] ["king"  "♥"] ["king"  "♦"] ["king"  "♣"]
+     ["queen" "♠"] ["queen" "♥"] ["queen" "♦"] ["queen" "♣"]})
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 95. To tree or not to tree
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;symmetry?
-(= (__ '(:a (:b nil nil) nil))
-   true)
+
+(defn p95 [x]
+  (let [valid-entry? (fn [x]
+                       (if (nil? x)
+                         true
+                         (if (sequential? x)
+                           (p95 x)
+                           false)))]
+    (and
+     (every? true? (flatten (map valid-entry? (rest x))))
+     (= (count (rest x)) 2))))
+
+(p95 '(:b nil (1 nil nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 96. Beauty is symmetry
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; split into left and right halves
+;; reverse one half
+;; check if they're equal
 
-(#(= % (reverse %)) '(:a (:b nil nil) (:b nil nil)))
+(second '(:a (:b nil nil) (:b nil nil)))
+
+
+(defn p96 [y]
+  (let
+      [reverse-branch (fn [[f s t]]
+                        (let [next-step (fn [x]
+                                          (if (sequential? x)
+                                            (reverse-branch x)
+                                            x))]
+                          (list f (next-step t) (next-step s))))]
+    (= (nth y 2)
+       (reverse-branch (second y)))))
+
+(= (nth '(:a (:b nil nil) (:b nil nil)) 2)
+   (reverse-branch (second '(:a (:b nil nil) (:b nil nil)))))
+
+
+(p96 '(:a (:b nil nil) (:b nil nil)))
+
+(reverse-branch (second '(:a (:b nil nil) (:b nil nil))))
+
+(first '(:a (:b nil nil) (:b nil nil)))
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 97. Pascal's Triangle
@@ -591,6 +806,60 @@ convert-num (fn [x] (#(second %) x))
 ;; anjensan's solution --- beautiful!!!
 ;;iterate #(map + `(0 ~@% 0) `(~@% 0))
 
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 153. Pairwise disjoint
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defn p153t [bigset]
+  (println "Iteration---")
+  (println (seq bigset))
+  (let [[s1 s2 & s] (if (sequential? bigset)
+                      bigset
+                      (seq bigset))]
+    (println s1)
+    (println s2)
+    (println s)
+    (println "Intersection set:: " (clojure.set/intersection s1 s2))
+    (println "Unioned set:: "(clojure.set/union s1 s2))
+    (println "List::" (list* (clojure.set/union s1 s2) s))
+    (if (not (empty? (clojure.set/intersection s1 s2)))
+      false
+      (if (nil? s2)
+        true
+        (p153t (list* (clojure.set/union s1 s2) s))))))
+
+(defn p153t [bigset]
+  (let [[s1 s2 & s] (if (sequential? bigset)
+                      bigset
+                      (seq bigset))]
+    (if (not (empty? (clojure.set/intersection s1 s2)))
+      false
+      (if (nil? s2)
+        true
+        (p153t (list* (clojure.set/union s1 s2) s))))))
+
+(p153t #{#{:a :b :c :d :e}
+         #{:a :b :c :d}
+         #{:a :b :c}
+         #{:a :b}
+         #{:a}})
+
+(p153t #{#{\U} #{\s} #{\e \R \E} #{\P \L} #{\.}})
+
+
+
+(apply clojure.set/intersection (seq #{#{:a :b :c :d :e}
+                                       #{:a :b :c :d}
+                                       #{:a :b :c}
+                                       #{:a :b}
+                                       #{:a}}))
+
+;; Yet again, Anjesan is amazing
+#(let [s (apply concat %)] (= (count s) (count (set s))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 156. Map defaults
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -643,3 +912,13 @@ convert-num (fn [x] (#(second %) x))
 ;; Hello, Sahil!
 
 
+
+
+(= (__ 3) '(1 1 2))
+
+(last (take 3 (iterate #(flatten (concat '(1) (map + % (drop 1 %)) '(1))) nil)))
+
+(last (take 4 (iterate #(conj % (reduce + (take 2 (reverse %)))) [1 1])))
+
+((fn [n] (last
+          (take (- n 1) (iterate #(conj % (reduce + (take 2 (reverse %)))) [1 1])))) 3)

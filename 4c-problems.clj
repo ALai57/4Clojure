@@ -224,6 +224,24 @@
 ((p58 nil) [1 2 3 4])
 
 
+(defn p58a [& fns]
+  (fn [& args]
+    (loop [[f & remain] (reverse fns)
+           result args]
+      (if (nil? f)
+        (first result)
+        (do
+          (println f result)
+          (recur remain [(apply f result)]))))))
+
+
+
+((p58a rest reverse) [1 2 3 4])
+
+((p58a zero? #(mod % 8) +) 3 5 7 9)
+(= true )
+
+(= [3 2 1] )
 
 (= [3 2 1] (#(->> %
                   reverse
@@ -921,4 +939,5 @@ convert-num (fn [x] (#(second %) x))
 (last (take 4 (iterate #(conj % (reduce + (take 2 (reverse %)))) [1 1])))
 
 ((fn [n] (last
-          (take (- n 1) (iterate #(conj % (reduce + (take 2 (reverse %)))) [1 1])))) 3)
+          (take (- n 1) (iterate #(conj % (reduce + (take 2 (reverse %)))) [1 1])))) 3
+ )

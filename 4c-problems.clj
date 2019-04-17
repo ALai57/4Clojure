@@ -251,6 +251,31 @@
 ((fn comb [& funcs]
    (println (reverse funcs ))) reverse rest)
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 59. Juxtaposition
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn p59 [& fns]
+  (fn [& args]
+    (loop [[f & remain] fns
+           result []]
+      (if (nil? f)
+        result
+        (recur
+         remain
+         (conj result (apply f args)))))))
+
+(defn p59 [& fns]
+  (fn [& args]
+    (for [f fns]
+      (apply f args))))
+
+((p59 + max min) 2 3 5 1 6 4)
+
+(= [21 6 1] ((__ + max min) 2 3 5 1 6 4))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 62. Re- iterate!
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

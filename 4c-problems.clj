@@ -311,6 +311,37 @@
 
 (pxx #(> % 5) [1 3 6 8])
 (merge-with )
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 65. Black box testing
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(= :map (__ {:a 1, :b 2}))
+
+(sequential? {:a 1, :b 2})
+(sequential? #{1 2 3})
+(sequential? '(1 2 3))
+(sequential? [1 2 3])
+
+(keys '(1 2 3))
+(vals [1 2 3 4])
+(map?  {:a 3})
+
+(#(condp = (first (str %))
+    \# (println "set")
+    \{ (println "map")
+    \( (println "list")
+    \[ (println "vec")) #{1 2 3})
+
+
+
+(first (str #{3 4 5 6}))
+
+#({{} :map #{} :set} (empty %) (if (reversible? %) :vector :list))
+
+(= :map )
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 66. Greatest common divisor
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -319,6 +350,13 @@
 
 ((__ 2 4) 2)
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 67. Prime numbers
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(= (__ 2) [2 3])
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 70. Word Sorting
@@ -350,6 +388,49 @@
 
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 74. Filter perfect squares
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(map #(Integer. %) (re-seq #"\w+" "2,3,4,5,6"))
+
+(= (__ "4,5,6,7,8,9") "4,9")
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 77. Anagram finder
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(apply set )
+
+(clojure.string/split "meat" #"")
+
+(= #{"m" "e" "a" "t"} (set (clojure.string/split "meat" #"")))
+
+(sort "meat")
+
+(set (filter #(> (count %) 1)
+             (map #(set (map :name (second %)))
+                  (group-by #(sort (:name %))
+                            (map-indexed
+                             #(hash-map :index %1 :name %2)
+                             ["meat" "mat" "team" "mate" "eat"])))))
+
+
+(defn p77 [s]
+  (set
+   (filter #(> (count %) 1)
+           (map #(set (map :name (second %)))
+                (group-by #(sort (:name %))
+                          (map-indexed #(hash-map :index %1 :name %2) s))))))
+
+(p77 ["meat" "mat" "team" "mate" "eat"])
+
+(get-in {:level1 {:level2 "hi"}} [:level1])
+
+(= (group-by sort ["meat" "mat" "team" "mate" "eat"])
+   #{#{"meat" "team" "mate"}})
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -277,6 +277,59 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 60. Sequence reductions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defn my-reduce
+
+  ([op input] (my-reduce op (first input) (rest input)))
+
+  ([op result input]
+
+   (lazy-seq
+    (if (empty? input) (list result)
+        (cons result
+              (my-reduce op
+                         (op result (first input))
+                         (rest input)))))))
+
+
+(defn my-reduce
+
+  ([op input] (my-reduce op (first input) (rest input)))
+
+  ([op result input]
+
+   (lazy-seq
+    (if (empty? input) (list result)
+        (cons result
+              (my-reduce op
+                         (op result (first input))
+                         (rest input)))))))
+
+()
+
+
+
+
+(take 5 (my-reduce + (range)))
+
+(loop [f +
+       s nil
+       x range
+       r]
+  (recur ))
+
+
+(rdxns + (range))
+
+
+(reduce {})
+(= (take 5 (__ + (range))) [0 1 3 6 10])
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 62. Re- iterate!
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
